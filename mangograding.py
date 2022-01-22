@@ -102,7 +102,8 @@ class CustomDataset(utils.Dataset):
             # Unfortunately, VIA doesn't include it in JSON, so we must read
             # the image. This is only managable since the dataset is tiny.
             print("numids",num_ids)
-            image_path = os.path.join(dataset_dir, a['filename'])
+	    path1 = "/content/mango_grading_maskrcnn/dataset/train/"
+            image_path = os.path.join(path1, a['filename'])
             image = skimage.io.imread(image_path)
             height, width = image.shape[:2]
 
@@ -174,7 +175,8 @@ def train(model):
     print("Training network heads")
     model.train(dataset_train, dataset_val,
                 learning_rate=config.LEARNING_RATE,
-                epochs=10,
+		custom_callbacks = [tensorboard_callback]
+                epochs=5,
                 layers='heads')
 			
 				
