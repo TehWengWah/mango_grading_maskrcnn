@@ -18,7 +18,7 @@ from mrcnn.visualize import display_instances
 import matplotlib.pyplot as plt
 
 # Root directory of the project
-ROOT_DIR = "D:\\FYP\\maskrcnn_mango"
+ROOT_DIR = "/content/mango_grading_maskrcnn"
 
 # Import Mask RCNN
 sys.path.append(ROOT_DIR)  # To find local version of the library
@@ -66,16 +66,16 @@ class CustomDataset(utils.Dataset):
         subset: Subset to load: train or val
         """
         # Add classes. We have only one class to add.
-        self.add_class("grading", 1, "premium")
-        self.add_class("grading", 2, "grade1")
-        self.add_class("grading", 3, "grade2")
+        self.add_class("object", 1, "premium")
+        self.add_class("object", 2, "grade1")
+        self.add_class("object", 3, "grade2")
 
         # Train or validation dataset?
         assert subset in ["train", "val"]
         dataset_dir = os.path.join(dataset_dir, subset)
 
         # We mostly care about the x and y coordinates of each region
-        annotations1 = json.load(open('D:\\FYP\\maskrcnn_mango\\dataset\\train\\train_json.json')
+        annotations1 = json.load(open('/content/mango_grading_maskrcnn/dataset/train/train_json.json'))
         # print(annotations1)
         annotations = list(annotations1.values())  # don't need the dict keys
 
@@ -90,12 +90,12 @@ class CustomDataset(utils.Dataset):
             # the outline of each object instance. There are stores in the
             # shape_attributes (see json format above)
             polygons = [r['shape_attributes'] for r in a['regions']] 
-            grading = [s['region_attributes']['names'] for s in a['regions']]
-            print("grading:",grading)
+            objects = [s['region_attributes']['grading'] for s in a['regions']]
+            print("objects:",objects)
             name_dict = {"premium": 1,"grade1": 2,"grade2": 3}
 
             # key = tuple(name_dict)
-            num_ids = [name_dict[a] for a in grading]
+            num_ids = [name_dict[a] for a in objects]
      
             # num_ids = [int(n['Event']) for n in objects]
             # load_mask() needs the image size to convert polygons to masks.
@@ -107,7 +107,7 @@ class CustomDataset(utils.Dataset):
             height, width = image.shape[:2]
 
             self.add_image(
-                "grading",  ## for a single class just add the name here
+                "object",  ## for a single class just add the name here
                 image_id=a['filename'],  # use file name as a unique image id
                 path=image_path,
                 width=width, height=height,
@@ -124,13 +124,13 @@ class CustomDataset(utils.Dataset):
         """
         # If not a Dog-Cat dataset image, delegate to parent class.
         image_info = self.image_info[image_id]
-        if image_info["source"] != "grading":
+        if image_info["source"] != "object":
             return super(self.__class__, self).load_mask(image_id)
 
         # Convert polygons to a bitmap mask of shape
         # [height, width, instance_count]
         info = self.image_info[image_id]
-        if info["source"] != "grading":
+        if info["source"] != "object":
             return super(self.__class__, self).load_mask(image_id)
         num_ids = info['num_ids']
         mask = np.zeros([info["height"], info["width"], len(info["polygons"])],
@@ -150,7 +150,7 @@ class CustomDataset(utils.Dataset):
     def image_reference(self, image_id):
         """Return the path of the image."""
         info = self.image_info[image_id]
-        if info["source"] == "grading":
+        if info["source"] == "object":
             return info["path"]
         else:
             super(self.__class__, self).image_reference(image_id)
@@ -159,12 +159,12 @@ def train(model):
     """Train the model."""
     # Training dataset.
     dataset_train = CustomDataset()
-    dataset_train.load_custom("D:\\FYP\\maskrcnn_mango\\dataset", "train")
+    dataset_train.load_custom("/content/mango_grading_maskrcnn/dataset", "train")
     dataset_train.prepare()
 
     # Validation dataset
     dataset_val = CustomDataset()
-    dataset_val.load_custom("D:\\FYP\\maskrcnn_mango\\dataset", "val")
+    dataset_val.load_custom("/content/mango_grading_maskrcnn/dataset", "val")
     dataset_val.prepare()
 
     # *** This training schedule is an example. Update to your needs ***
