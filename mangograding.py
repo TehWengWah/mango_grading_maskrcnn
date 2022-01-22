@@ -175,7 +175,7 @@ def train(model):
     print("Training network heads")
     model.train(dataset_train, dataset_val,
                 learning_rate=config.LEARNING_RATE,
-		custom_callbacks = [tensorboard_callback]
+		custom_callbacks = [tensorboard_callback],
                 epochs=5,
                 layers='heads')
 			
