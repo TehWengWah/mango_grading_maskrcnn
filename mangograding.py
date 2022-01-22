@@ -16,6 +16,12 @@ import skimage.draw
 import cv2
 from mrcnn.visualize import display_instances
 import matplotlib.pyplot as plt
+import tensorflow as tf
+from keras.callbacks import TensorBoard
+# Tensorflow board
+
+logdir = "/content/mango_grading_maskrcnn"
+tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=logdir)
 
 # Root directory of the project
 ROOT_DIR = "/content/mango_grading_maskrcnn"
@@ -102,7 +108,7 @@ class CustomDataset(utils.Dataset):
             # Unfortunately, VIA doesn't include it in JSON, so we must read
             # the image. This is only managable since the dataset is tiny.
             print("numids",num_ids)
-	    path1 = "/content/mango_grading_maskrcnn/dataset/train/"
+            path1 = "/content/mango_grading_maskrcnn/dataset/train/"
             image_path = os.path.join(path1, a['filename'])
             image = skimage.io.imread(image_path)
             height, width = image.shape[:2]
@@ -175,7 +181,7 @@ def train(model):
     print("Training network heads")
     model.train(dataset_train, dataset_val,
                 learning_rate=config.LEARNING_RATE,
-		custom_callbacks = [tensorboard_callback],
+                custom_callbacks = [tensorboard_callback],
                 epochs=5,
                 layers='heads')
 			
