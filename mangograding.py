@@ -55,10 +55,12 @@ class CustomConfig(Config):
     NUM_CLASSES = 1 + 3  # Background + 3 grading
 
     # Number of training steps per epoch
-    STEPS_PER_EPOCH = 10
+    STEPS_PER_EPOCH = 5
 
     # Skip detections with < 90% confidence
-    DETECTION_MIN_CONFIDENCE = 0.9
+    DETECTION_MIN_CONFIDENCE = 0.7
+	
+	BATCH_SIZE = 2
 
 ############################################################
 #  Dataset
@@ -182,7 +184,7 @@ def train(model):
     model.train(dataset_train, dataset_val,
                 learning_rate=config.LEARNING_RATE,
                 custom_callbacks = [tensorboard_callback],
-                epochs=5,
+                epochs=10,
                 layers='heads')
 			
 				
