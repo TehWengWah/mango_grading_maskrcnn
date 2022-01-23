@@ -21,7 +21,7 @@ from keras.callbacks import TensorBoard
 # Tensorflow board
 
 logdir = "/content/mango_grading_maskrcnn"
-tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=logdir, histogram_freq=1)
+tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=logdir)
 
 # Root directory of the project
 ROOT_DIR = "/content/mango_grading_maskrcnn"
