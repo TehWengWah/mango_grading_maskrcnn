@@ -59,8 +59,7 @@ class CustomConfig(Config):
 
     # Skip detections with < 90% confidence
     DETECTION_MIN_CONFIDENCE = 0.7
-	
-	BATCH_SIZE = 2
+    BATCH_SIZE = 2
 
 ############################################################
 #  Dataset
