@@ -202,7 +202,4 @@ model.load_weights(weights_path, by_name=True, exclude=[
             "mrcnn_class_logits", "mrcnn_bbox_fc",
             "mrcnn_bbox", "mrcnn_mask"])
 
-loss_fn=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
-model.compile(optimizer='adam',loss=loss_fn,metrics=['accuracy'])
-
 train(model)
