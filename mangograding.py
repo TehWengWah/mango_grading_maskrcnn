@@ -21,7 +21,7 @@ from keras.callbacks import TensorBoard
 # Tensorflow board
 
 logdir = "/content/mango_grading_maskrcnn"
-tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=logdir)
+tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=logdir, histogram_freq=1)
 
 # Root directory of the project
 ROOT_DIR = "/content/mango_grading_maskrcnn"
@@ -186,8 +186,7 @@ def train(model):
                 learning_rate=config.LEARNING_RATE,
                 custom_callbacks = [tensorboard_callback],
                 epochs=30,
-                layers='heads')
-			
+                layers='heads')	
 				
 				
 config = CustomConfig()
@@ -202,5 +201,8 @@ if not os.path.exists(weights_path):
 model.load_weights(weights_path, by_name=True, exclude=[
             "mrcnn_class_logits", "mrcnn_bbox_fc",
             "mrcnn_bbox", "mrcnn_mask"])
+
+loss_fn=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
+model.compile(optimizer='adam',loss=loss_fn,metrics=['accuracy'])
 
 train(model)
