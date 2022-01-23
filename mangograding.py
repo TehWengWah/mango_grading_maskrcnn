@@ -58,8 +58,10 @@ class CustomConfig(Config):
     STEPS_PER_EPOCH = 5
 
     # Skip detections with < 90% confidence
-    DETECTION_MIN_CONFIDENCE = 0.7
+    DETECTION_MIN_CONFIDENCE = 0.6
     BATCH_SIZE = 2
+    BACKBONE = "resnet50"
+    
 
 ############################################################
 #  Dataset
@@ -183,7 +185,7 @@ def train(model):
     model.train(dataset_train, dataset_val,
                 learning_rate=config.LEARNING_RATE,
                 custom_callbacks = [tensorboard_callback],
-                epochs=10,
+                epochs=30,
                 layers='heads')
 			
 				
